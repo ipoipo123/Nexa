@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f8fc">
+  <meta name="description" content="NexaPay digital wallet demo">
+  <title>NexaPay — Digital Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a id="skipLink" class="skip-link" href="#loginUsername">Skip to sign in</a>
+  <div id="toast" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- AUTH -->
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-shell">
+      <div class="auth-showcase">
+        <div class="auth-brand">
+          <div class="brand-mark"><span>N</span><i>✦</i></div>
+          <div>
+            <h1>NexaPay</h1>
+            <p>Simple money. Smarter moves.</p>
+          </div>
+        </div>
+        <div class="showcase-copy">
+          <span class="showcase-kicker"><i></i> YOUR EVERYDAY WALLET</span>
+          <h2>Make every<br>move <em>count.</em></h2>
+          <p>One simple place to add money, send it to the people you know, and keep track of what matters.</p>
+        </div>
+        <div class="showcase-card" aria-hidden="true">
+          <div class="showcase-card-top"><span class="showcase-card-mark">N<span>✦</span></span><span>PERSONAL WALLET</span></div>
+          <div class="showcase-card-lines"><i></i><i></i><i></i><i></i></div>
+          <div class="showcase-card-bottom"><span>READY WHEN YOU ARE</span><b>•••• &nbsp; •••• &nbsp; •••• &nbsp; 2048</b></div>
+          <span class="showcase-orbit orbit-one"></span><span class="showcase-orbit orbit-two"></span>
+        </div>
+        <div class="showcase-foot"><span class="foot-check">✓</span> Built for simple, everyday money moves</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-heading">
+          <span class="auth-overline">WELCOME TO NEXAPAY</span>
+          <h2 id="authHeading">Good to have you here</h2>
+          <p id="authSubheading">Sign in or create an account to get started.</p>
+        </div>
+        <div class="auth-tabs" role="tablist" aria-label="Account access">
+          <button id="loginTab" class="tab active" type="button" role="tab" aria-controls="loginForm" aria-selected="true" data-auth="login">Log in</button>
+          <button id="registerTab" class="tab" type="button" role="tab" aria-controls="registerForm" aria-selected="false" data-auth="register">Create account</button>
+        </div>
+
+        <form id="loginForm" class="auth-form" role="tabpanel" aria-labelledby="loginTab">
+          <label for="loginUsername">Username</label>
+          <input id="loginUsername" required autocomplete="username" placeholder="Enter your username">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Enter your password">
+          <button class="primary full" type="submit">Log in <span aria-hidden="true">→</span></button>
+          <div class="demo-box"><span class="demo-icon">i</span><span>Demo login <b>student</b> · Password <b id="demoPasswordHint">NexaPayDemo2026</b> · PIN <b id="demoPinHint">1234</b></span></div>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden" role="tabpanel" aria-labelledby="registerTab">
+          <label for="regName">Full name</label>
+          <input id="regName" required maxlength="40" autocomplete="name" placeholder="Your full name">
+          <label for="regUsername">Username</label>
+          <input id="regUsername" required maxlength="20" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="Letters, numbers, underscore">
+          <label for="regPassword">Password</label>
+          <input id="regPassword" type="password" minlength="8" maxlength="72" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,72}" title="Use at least 8 characters and include a letter and a number." required autocomplete="new-password" placeholder="8+ characters, letters and numbers" aria-describedby="passwordHelp">
+          <div id="passwordHelp" class="password-guidance" data-password-guidance-for="regPassword">
+            <span class="guidance-intro">For a stronger password, include:</span>
+            <div class="password-rules"><span data-password-rule="length"><i aria-hidden="true">○</i> 8+ characters</span><span data-password-rule="letter"><i aria-hidden="true">○</i> A letter</span><span data-password-rule="number"><i aria-hidden="true">○</i> A number</span></div>
+          </div>
+          <label for="regPin">4-digit wallet PIN</label>
+          <input id="regPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required placeholder="Enter a 4-digit PIN">
+          <button class="primary full" type="submit">Create account <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="auth-secure"><span>▣</span> Your demo account stays in this browser</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <div class="brand-mark small"><span>N</span><i>✦</i></div>
+        <div><b>NexaPay</b><small>Digital Wallet</small></div>
+      </div>
+
+      <div class="user-mini">
+        <div id="avatar" class="avatar">N</div>
+        <div><b id="sideName">User</b><small id="sideUsername">@user</small></div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <span class="nav-label">OVERVIEW</span>
+        <button class="nav-item active" type="button" aria-current="page" aria-label="Dashboard" title="Dashboard" data-page="dashboard"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></button>
+        <button class="nav-item inbox-nav-item" type="button" aria-label="Inbox" title="Inbox" data-page="inbox"><span class="nav-icon" aria-hidden="true">✉</span><span id="navInboxBadge" class="inbox-badge hidden" aria-hidden="true"></span><span>Inbox</span></button>
+        <span class="nav-label nav-label-spaced">MONEY MOVES</span>
+        <button class="nav-item" type="button" aria-label="Add money" title="Add money" data-page="add"><span class="nav-icon" aria-hidden="true">＋</span><span>Add money</span></button>
+        <button class="nav-item" type="button" aria-label="Buy load" title="Buy load" data-page="load"><span class="nav-icon" aria-hidden="true">ϟ</span><span>Buy load</span></button>
+        <button class="nav-item" type="button" aria-label="Pay bills" title="Pay bills" data-page="bills"><span class="nav-icon" aria-hidden="true">₱</span><span>Pay bills</span></button>
+        <button class="nav-item" type="button" aria-label="Send money" title="Send money" data-page="send"><span class="nav-icon" aria-hidden="true">↗</span><span>Send money</span></button>
+        <button class="nav-item" type="button" aria-label="Bank transfer" title="Bank transfer" data-page="bank"><span class="nav-icon" aria-hidden="true">⇢</span><span>Bank transfer</span></button>
+        <button class="nav-item" type="button" aria-label="Withdraw" title="Withdraw" data-page="withdraw"><span class="nav-icon" aria-hidden="true">↙</span><span>Withdraw</span></button>
+        <span class="nav-label nav-label-spaced">GROW</span>
+        <button class="nav-item" type="button" aria-label="Grow" title="Grow" data-page="grow"><span class="nav-icon" aria-hidden="true">↗</span><span>Grow</span></button>
+        <button class="nav-item" type="button" aria-label="My QR" title="My QR" data-page="qr"><span class="nav-icon" aria-hidden="true">▦</span><span>My QR</span></button>
+        <span class="nav-label nav-label-spaced">ACCOUNT</span>
+        <button class="nav-item" type="button" aria-label="Transactions" title="Transactions" data-page="transactions"><span class="nav-icon" aria-hidden="true">☷</span><span>Transactions</span></button>
+        <button class="nav-item" type="button" aria-label="My profile" title="My profile" data-page="profile"><span class="nav-icon" aria-hidden="true">♙</span><span>My profile</span></button>
+        <button class="nav-item" type="button" aria-label="Settings" title="Settings" data-page="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span>Settings</span></button>
+        <button class="nav-item" type="button" aria-label="Terms and conditions" title="Terms and conditions" data-page="terms"><span class="nav-icon" aria-hidden="true">▤</span><span>Terms &amp; conditions</span></button>
+        <button class="nav-item nav-more" type="button" aria-label="More" title="More" data-page="more"><span class="nav-icon" aria-hidden="true">•••</span><span>More</span></button>
+      </nav>
+
+      <div class="sidebar-foot"><span class="sidebar-foot-mark">N</span><span>Spend thoughtfully.<small>NexaPay demo wallet</small></span></div>
+    </aside>
+
+    <main class="main" id="mainContent" tabindex="-1">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">NexaPay Wallet</span>
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <div class="top-actions"><button id="inboxShortcut" class="inbox-shortcut" type="button" data-go="inbox" aria-label="Inbox, no unread messages" title="Inbox"><span aria-hidden="true">✉</span><span id="topInboxBadge" class="inbox-badge hidden" aria-hidden="true"></span></button><div class="top-user"><div class="top-user-copy"><small>Welcome back,</small><span id="topName">User</span></div><div id="topAvatar" class="avatar" aria-hidden="true">N</div></div></div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="page">
+        <div class="dashboard-heading">
+          <div><span class="eyebrow">YOUR MONEY, AT A GLANCE</span><h1>Welcome, <span id="greetingName">there</span></h1><p>Here’s what’s happening with your wallet today.</p></div>
+          <span class="today-pill"><i aria-hidden="true"></i> Wallet active</span>
+        </div>
+        <div class="hero-card">
+          <div class="hero-content">
+            <div class="balance-label"><span class="balance-dot" aria-hidden="true"></span> Available balance <button id="toggleBalance" class="balance-toggle" type="button" aria-label="Hide wallet balances" aria-pressed="false" title="Hide wallet balances"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.6"></circle><path class="eye-slash" d="m4 4 16 16"></path></svg></button></div>
+            <h2 id="dashBalance">₱0.00</h2>
+            <div class="hero-bottom"><span class="hero-owner">NexaPay personal wallet</span><span class="hero-status"><i></i> Ready to use</span></div>
+          </div>
+          <div class="hero-art" aria-hidden="true"><span class="hero-orbit hero-orbit-a"></span><span class="hero-orbit hero-orbit-b"></span><div class="wallet-chip"><span class="chip-mark">N<i>✦</i></span><span class="chip-name">NEXAPAY</span><b>WALLET</b></div></div>
+        </div>
+
+        <div class="quick-heading"><div><h2>What would you like to do?</h2><p>Fast, simple access to your wallet.</p></div><span class="quick-heading-note">QUICK ACTIONS</span></div>
+        <div class="quick-grid">
+          <button class="quick quick-add" type="button" data-go="add"><span class="quick-icon" aria-hidden="true">＋</span><b>Add money</b><small>Top up your wallet</small><i aria-hidden="true">↗</i></button>
+          <button class="quick quick-send" type="button" data-go="send"><span class="quick-icon" aria-hidden="true">↗</span><b>Send money</b><small>Transfer to a user</small><i aria-hidden="true">↗</i></button>
+          <button class="quick quick-withdraw" type="button" data-go="withdraw"><span class="quick-icon" aria-hidden="true">↙</span><b>Withdraw</b><small>Cash out demo funds</small><i aria-hidden="true">↗</i></button>
+          <button class="quick quick-qr" type="button" data-go="qr"><span class="quick-icon" aria-hidden="true">▦</span><b>Receive money</b><small>Show your QR code</small><i aria-hidden="true">↗</i></button>
+          <button class="quick quick-load" type="button" data-go="load"><span class="quick-icon" aria-hidden="true">ϟ</span><b>Buy load</b><small>Top up a mobile number</small><i aria-hidden="true">↗</i></button>
+          <button class="quick quick-bills" type="button" data-go="bills"><span class="quick-icon" aria-hidden="true">₱</span><b>Pay bills</b><small>Utilities, internet and more</small><i aria-hidden="true">↗</i></button>
+        </div>
+
+        <button class="grow-promo" type="button" data-go="grow">
+          <span class="grow-promo-icon" aria-hidden="true">✦</span>
+          <span class="grow-promo-copy"><small>NEW · GROW</small><b>Give your goals a place to grow</b><span>Build savings goals and explore a demo investment portfolio.</span></span>
+          <span class="grow-promo-link">Explore Grow <i aria-hidden="true">→</i></span>
+        </button>
+
+        <div class="grid-2">
+          <section class="panel">
+            <div class="panel-head"><div><span class="panel-kicker">YOUR WALLET ACTIVITY</span><h3>Recent transactions</h3></div><button class="link" data-go="transactions">View all <span>→</span></button></div>
+            <div id="recentTransactions"></div>
+          </section>
+          <section class="panel monthly-panel">
+            <div class="monthly-head"><div><span class="panel-kicker">MONTHLY OVERVIEW</span><h3>Money in &amp; out</h3></div><span id="monthLabel" class="month-label">This month</span></div>
+            <div class="monthly-row"><span class="monthly-icon money-in" aria-hidden="true">↓</span><div class="monthly-copy"><b>Money in</b><small id="monthInCount">0 credits</small></div><strong id="monthIn">₱0.00</strong></div>
+            <div class="monthly-row"><span class="monthly-icon money-out" aria-hidden="true">↑</span><div class="monthly-copy"><b>Money out</b><small id="monthOutCount">0 debits</small></div><strong id="monthOut">₱0.00</strong></div>
+            <div id="weeklyActivityChart" class="activity-chart" role="img" aria-label="No wallet activity in the last seven days."><div class="activity-chart-head"><b>Last 7 days</b><span class="activity-legend"><i class="legend-in"></i> In <i class="legend-out"></i> Out</span></div><div class="activity-bars" aria-hidden="true"></div></div>
+            <div class="monthly-foot"><span class="monthly-foot-dot" aria-hidden="true"></span> Based on activity recorded this month</div>
+          </section>
+        </div>
+      </div>
+
+      <!-- INBOX -->
+      <div id="page-inbox" class="page hidden">
+        <div class="page-intro"><span class="eyebrow">YOUR WALLET UPDATES</span><h1>Inbox</h1><p>Transaction updates and account messages, all in one place.</p></div>
+        <section class="panel inbox-panel">
+          <div class="inbox-panel-head"><div><span class="panel-kicker">NEXAPAY MESSAGES</span><h2>Your inbox</h2><p id="inboxSummary" class="muted">Your latest wallet updates appear here.</p></div><button id="markAllRead" class="secondary" type="button">Mark all as read</button></div>
+          <div class="inbox-filters" role="group" aria-label="Filter inbox messages">
+            <button class="inbox-filter active" type="button" data-inbox-filter="all" aria-pressed="true">All</button>
+            <button class="inbox-filter" type="button" data-inbox-filter="unread" aria-pressed="false">Unread</button>
+            <button class="inbox-filter" type="button" data-inbox-filter="wallet" aria-pressed="false">Wallet</button>
+            <button class="inbox-filter" type="button" data-inbox-filter="grow" aria-pressed="false">Grow</button>
+            <button class="inbox-filter" type="button" data-inbox-filter="account" aria-pressed="false">Account</button>
+          </div>
+          <div id="inboxList" class="inbox-list" aria-live="polite"></div>
+        </section>
+        <p class="inbox-demo-note"><span aria-hidden="true">i</span> Inbox messages are generated by this demo wallet and saved only in this browser.</p>
+      </div>
+
+      <!-- GROW -->
+      <div id="page-grow" class="page hidden">
+        <div class="page-intro"><span class="eyebrow">PLAN FOR WHAT'S NEXT</span><h1>Grow</h1><p>Set a savings goal or explore a paper portfolio at your own pace.</p></div>
+        <section class="grow-hero">
+          <div class="grow-hero-copy"><span class="grow-live-pill"><i aria-hidden="true"></i> DEMO WORKSPACE</span><h2>Small steps.<br><em>Brighter plans.</em></h2><p>Inspired by GCash Grow categories: savings, funds, stocks, bonds, crypto and insurance information.</p><div class="grow-product-chips"><span>Save</span><span>Funds</span><span>Stocks</span><span>Bonds</span><span>Crypto</span><span>Protection info</span></div></div>
+          <div class="grow-stats" aria-label="Grow summary">
+            <div><small>In savings goals</small><strong id="growSavingsTotal">₱0.00</strong></div>
+            <div><small>Paper portfolio</small><strong id="growInvestedTotal">₱0.00</strong></div>
+            <div><small>Available wallet</small><strong id="growWalletAvailable">₱0.00</strong></div>
+          </div>
+          <span class="grow-orbit grow-orbit-one" aria-hidden="true"></span><span class="grow-orbit grow-orbit-two" aria-hidden="true"></span>
+        </section>
+        <div class="grow-layout">
+          <section class="panel grow-panel">
+            <div class="panel-head"><div><span class="panel-kicker">GSAVE-INSPIRED · DEMO ONLY</span><h3>Savings goals</h3><p class="muted">Create a goal, then move demo money in or out.</p></div><span class="grow-panel-icon savings-grow-icon" aria-hidden="true">◎</span></div>
+            <form id="growGoalForm" class="grow-form">
+              <div class="grow-form-fields"><div><label for="growGoalName">Goal name</label><input id="growGoalName" maxlength="40" placeholder="e.g. New laptop" required></div><div><label for="growGoalTarget">Target amount</label><input id="growGoalTarget" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="₱5,000" required></div></div>
+              <button class="primary" type="submit">＋ Create goal</button>
+            </form>
+            <div id="growGoalsList" class="grow-list" aria-live="polite"></div>
+          </section>
+          <section class="panel grow-panel">
+            <div class="panel-head"><div><span class="panel-kicker">PAPER PORTFOLIO · DEMO ONLY</span><h3>Explore investing</h3><p class="muted">Try a simulated contribution; no market prices are used.</p></div><span class="grow-panel-icon portfolio-grow-icon" aria-hidden="true">↗</span></div>
+            <form id="growInvestmentForm" class="grow-form grow-investment-form">
+              <label for="growProduct">Demo product</label>
+              <select id="growProduct"><option value="GFunds demo fund">GFunds · demo fund</option><option value="GBonds demo bond">GBonds · demo bond</option><option value="GStocks PH demo shares">GStocks PH · demo shares</option><option value="GCrypto demo basket">GCrypto · demo basket</option></select>
+              <label for="growInvestmentAmount">Contribution</label>
+              <input id="growInvestmentAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="₱0.00" required>
+              <div class="balance-note">Available balance: <b id="growWalletBalance">₱0.00</b></div>
+              <button class="primary full" type="submit">Continue &amp; Confirm</button>
+            </form>
+            <div class="grow-positions-head"><div><span class="panel-kicker">YOUR DEMO POSITIONS</span><h3>Paper portfolio</h3></div><span class="paper-badge">AT CONTRIBUTED VALUE</span></div>
+            <div id="growHoldingsList" class="grow-list" aria-live="polite"></div>
+          </section>
+        </div>
+        <section class="grow-info-row">
+          <div class="grow-insurance-card"><span class="grow-insurance-icon" aria-hidden="true">＋</span><div><span class="panel-kicker">GINSURE-INSPIRED</span><b>Protection information</b><p>Insurance discovery is represented as information only. This demo cannot quote, sell or manage coverage.</p></div><span class="info-only-badge">INFO ONLY</span></div>
+          <p class="grow-disclaimer"><b>Demo only.</b> Savings goals and the paper portfolio exist only in this browser. No real account, fund, stock, bond, crypto, insurance, interest, price movement, coverage or return is provided. Paper positions stay at their contributed amount.</p>
+        </section>
+      </div>
+
+      <!-- ADD -->
+      <div id="page-add" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon">＋</div>
+          <h2>Add Money</h2>
+          <p class="muted">Add demo funds to your wallet.</p>
+          <label for="addAmount">Amount</label>
+          <input id="addAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Amount to add in Philippine pesos">
+          <div class="amounts">
+            <button type="button" data-amount="100" aria-pressed="false">₱100</button><button type="button" data-amount="200" aria-pressed="false">₱200</button>
+            <button type="button" data-amount="500" aria-pressed="false">₱500</button><button type="button" data-amount="1000" aria-pressed="false">₱1,000</button>
+          </div>
+          <button id="addMoneyBtn" class="primary full">Add to Wallet</button>
+        </section>
+      </div>
+
+      <!-- BUY LOAD -->
+      <div id="page-load" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon load-section-icon">ϟ</div>
+          <h2>Buy mobile load</h2>
+          <p class="muted">Choose a network, number and load amount.</p>
+          <label for="loadNetwork">Mobile network</label>
+          <select id="loadNetwork"><option value="Globe">Globe</option><option value="Smart">Smart</option><option value="DITO">DITO</option></select>
+          <label for="loadPhone">Mobile number</label>
+          <input id="loadPhone" type="tel" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" autocomplete="tel-national" placeholder="09XXXXXXXXX" aria-describedby="loadNote">
+          <div class="form-label">Choose load amount</div>
+          <div class="load-offers" role="group" aria-label="Choose a load amount">
+            <button type="button" data-load-amount="50" aria-pressed="false"><b>₱50</b><small>Load</small></button>
+            <button type="button" data-load-amount="100" aria-pressed="false"><b>₱100</b><small>Load</small></button>
+            <button type="button" data-load-amount="300" aria-pressed="false"><b>₱300</b><small>Load</small></button>
+            <button type="button" data-load-amount="500" aria-pressed="false"><b>₱500</b><small>Load</small></button>
+          </div>
+          <label for="loadAmount">Or enter another amount</label>
+          <input id="loadAmount" class="big-input" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 25" aria-label="Custom mobile load amount in whole pesos">
+          <small class="form-hint">Enter any whole-peso amount, such as ₱25 or ₱65.</small>
+          <div class="balance-note">Available balance: <b id="loadBalance">₱0.00</b></div>
+          <p id="loadNote" class="demo-action-note">Demo only: no mobile load will be sent. The purchase is recorded in this wallet.</p>
+          <button id="buyLoadBtn" class="primary full" type="button">Continue &amp; Confirm</button>
+        </section>
+      </div>
+
+      <!-- PAY BILLS -->
+      <div id="page-bills" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon bills-section-icon">₱</div>
+          <h2>Pay a bill</h2>
+          <p class="muted">Select a demo biller and enter the account details.</p>
+          <label for="billCategory">Bill category</label>
+          <select id="billCategory">
+            <option value="Electricity">Electricity</option><option value="Water">Water</option><option value="Internet">Internet</option>
+            <option value="Telecom">Telecom</option><option value="Credit card">Credit card</option><option value="Government">Government</option><option value="School">School</option>
+          </select>
+          <label for="billBiller">Biller</label>
+          <select id="billBiller" required></select>
+          <label for="billAccount">Account or reference number</label>
+          <input id="billAccount" maxlength="32" autocomplete="off" placeholder="Enter the reference from your bill" required>
+          <label for="billAmount">Amount</label>
+          <input id="billAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Bill payment amount in Philippine pesos">
+          <div class="balance-note">Available balance: <b id="billBalance">₱0.00</b></div>
+          <p class="demo-action-note">Demo only: no biller is contacted and no payment is sent.</p>
+          <button id="payBillBtn" class="primary full" type="button">Continue &amp; Confirm</button>
+        </section>
+      </div>
+
+      <!-- BANK TRANSFER -->
+      <div id="page-bank" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon bank-section-icon">⇢</div>
+          <h2>Bank transfer</h2>
+          <p class="muted">Send demo funds to a saved bank account.</p>
+          <label for="bankName">Bank</label>
+          <select id="bankName"><option>BDO Unibank</option><option>BPI</option><option>Metrobank</option><option>UnionBank</option><option>Landbank</option><option>RCBC</option></select>
+          <label for="bankAccountName">Account name</label>
+          <input id="bankAccountName" maxlength="60" autocomplete="off" placeholder="Name on the account">
+          <label for="bankAccountNumber">Account number</label>
+          <input id="bankAccountNumber" type="text" inputmode="numeric" maxlength="24" autocomplete="off" placeholder="Enter a demo account number">
+          <label for="bankAmount">Amount</label>
+          <input id="bankAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Bank transfer amount in Philippine pesos">
+          <div class="balance-note">Available balance: <b id="bankBalance">₱0.00</b></div>
+          <div class="outgoing-limit-note"><span aria-hidden="true">i</span><p id="bankLimitNote">Demo outgoing limit: up to ₱10,000 per transaction.</p><button class="inline-link" type="button" data-go="profile">View limits</button></div>
+          <p class="demo-action-note">Demo only: no bank is contacted and no transfer is sent.</p>
+          <button id="bankTransferBtn" class="primary full" type="button">Continue &amp; Confirm</button>
+        </section>
+      </div>
+
+      <!-- SEND -->
+      <div id="page-send" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon">↗</div>
+          <h2>Send Money</h2>
+          <p class="muted">Transfer funds to another registered NexaPay user.</p>
+          <label for="sendRecipient">Recipient username</label>
+          <input id="sendRecipient" autocomplete="off" placeholder="@username">
+          <label for="sendAmount">Amount</label>
+          <input id="sendAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Amount to send in Philippine pesos">
+          <div class="balance-note">Your balance: <b id="sendBalance">₱0.00</b></div>
+          <div class="outgoing-limit-note"><span aria-hidden="true">i</span><p id="sendLimitNote">Demo outgoing limit: up to ₱10,000 per transaction.</p><button class="inline-link" type="button" data-go="profile">View limits</button></div>
+          <button id="sendMoneyBtn" class="primary full">Continue & Confirm</button>
+        </section>
+      </div>
+
+      <!-- WITHDRAW -->
+      <div id="page-withdraw" class="page hidden">
+        <section class="form-panel narrow">
+          <div class="section-icon">↙</div>
+          <h2>Withdraw</h2>
+          <p class="muted">Simulate a cash-out from your NexaPay wallet.</p>
+          <label for="withdrawAmount">Amount</label>
+          <input id="withdrawAmount" class="big-input" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Amount to withdraw in Philippine pesos">
+          <div class="balance-note">Available: <b id="withdrawBalance">₱0.00</b></div>
+          <div class="outgoing-limit-note"><span aria-hidden="true">i</span><p id="withdrawLimitNote">Demo outgoing limit: up to ₱10,000 per transaction.</p><button class="inline-link" type="button" data-go="profile">View limits</button></div>
+          <button id="withdrawBtn" class="primary full">Continue & Confirm</button>
+        </section>
+      </div>
+
+      <!-- QR -->
+      <div id="page-qr" class="page hidden">
+        <section class="qr-layout">
+          <div class="panel qr-card qr-print-target">
+            <span class="eyebrow">Receive money</span>
+            <h2>My NexaPay QR</h2>
+            <p class="muted">Let another user scan or enter your username.</p>
+            <div id="qrcode"></div>
+            <div class="qr-user" id="qrUsername">@user</div>
+            <button id="downloadQR" class="secondary">Print QR Card</button>
+          </div>
+          <div class="panel">
+            <h3>How it works</h3>
+            <ol class="steps">
+              <li>Open your My QR page.</li>
+              <li>Show your QR to another user.</li>
+              <li>The sender can use your username.</li>
+              <li>Confirm the amount with their PIN.</li>
+            </ol>
+            <div class="notice">QR payments are simulated in this front-end school project.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div id="page-transactions" class="page hidden">
+        <section class="panel">
+          <div class="panel-head"><div><h2>Transaction History</h2><p class="muted">All activity for your wallet.</p></div><div class="history-actions"><button id="exportTransactions" class="secondary" type="button">Export CSV</button><button id="clearTransactions" class="danger-outline" type="button">Clear history</button></div></div>
+          <div class="transaction-tools">
+            <label class="search-field"><span aria-hidden="true">⌕</span><input id="transactionSearch" type="search" placeholder="Search transactions" aria-label="Search transaction history"></label>
+            <select id="transactionFilter" aria-label="Filter transaction type"><option value="all">All activity</option><option value="credit">Money in</option><option value="debit">Money out</option></select>
+          </div>
+          <p id="transactionResultCount" class="transaction-result-count" aria-live="polite" aria-atomic="true"></p>
+          <div class="table-wrap">
+            <table><thead><tr><th>Type</th><th>Details</th><th>Amount</th><th>Date</th></tr></thead><tbody id="transactionTable"></tbody></table>
+          </div>
+        </section>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="page-profile" class="page hidden">
+        <section class="profile-grid">
+          <div class="panel profile-card">
+            <div id="profileAvatar" class="profile-avatar">N</div>
+            <h2 id="profileName">User</h2><p id="profileUsername" class="muted">@user</p>
+            <span class="status-pill">● Verified Demo Account</span>
+          </div>
+          <div class="panel">
+            <h3>Account Details</h3>
+            <div class="detail"><span>Account type</span><b>Personal Wallet</b></div>
+            <div class="detail"><span>Wallet balance</span><b id="profileBalance">₱0.00</b></div>
+            <div class="detail"><span>Total transactions</span><b id="profileCount">0</b></div>
+            <div class="detail"><span>Security</span><b>4-digit PIN</b></div>
+            <hr>
+            <div class="profile-subhead"><div><h3>Outgoing limits</h3><p class="muted">Demo rules for sends, bank transfers and withdrawals.</p></div><span class="demo-limit-badge">DEMO</span></div>
+            <div class="limit-block"><div class="limit-heading"><span>Per transaction</span><b id="perTransactionLimit">₱10,000.00</b></div></div>
+            <div class="limit-block"><div class="limit-heading"><span>Daily outgoing</span><b id="dailyLimitAmount">₱25,000.00</b></div><div id="dailyLimitBar" class="limit-meter" role="progressbar" aria-label="Daily outgoing limit used" aria-valuemin="0" aria-valuemax="25000" aria-valuenow="0"><span></span></div><small id="dailyLimitUsage">₱0.00 of ₱25,000.00 used today</small></div>
+            <div class="limit-block"><div class="limit-heading"><span>Monthly outgoing</span><b id="monthlyLimitAmount">₱100,000.00</b></div><div id="monthlyLimitBar" class="limit-meter" role="progressbar" aria-label="Monthly outgoing limit used" aria-valuemin="0" aria-valuemax="100000" aria-valuenow="0"><span></span></div><small id="monthlyLimitUsage">₱0.00 of ₱100,000.00 used this month</small></div>
+            <hr>
+            <h3>About NexaPay</h3>
+            <p class="muted">A front-end e-wallet prototype designed for a school performance task. It demonstrates account creation, multiple users, bank transfers, mobile load and bill payment simulations, savings goals, a paper portfolio, balance management, transaction records, PIN confirmation, QR receiving and printable receipts.</p>
+            <div class="profile-demo-note"><span aria-hidden="true">i</span><div><b>Demo wallet</b><small>Account data stays in this browser. Don’t reuse a real password or PIN.</small></div></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="page-settings" class="page hidden">
+        <div class="page-intro"><span class="eyebrow">YOUR ACCOUNT</span><h1>Settings</h1><p>Manage your demo profile and wallet security.</p></div>
+        <div class="settings-grid">
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon">♙</span><div><h3>Profile details</h3><p>Keep your wallet name up to date.</p></div></div>
+            <form id="profileSettingsForm" class="settings-form">
+              <label for="settingsName">Full name</label>
+              <input id="settingsName" maxlength="40" autocomplete="name" required>
+              <button class="primary" type="submit">Save changes</button>
+              <p id="profileSaveStatus" class="settings-status" role="status"></p>
+            </form>
+          </section>
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon privacy-icon">◉</span><div><h3>Privacy &amp; display</h3><p>Choose how wallet amounts appear.</p></div></div>
+            <label class="setting-toggle" for="hideBalanceDefault"><span><b>Hide balances by default</b><small>Mask balances when you open the wallet.</small></span><input id="hideBalanceDefault" type="checkbox"><span class="toggle-track" aria-hidden="true"></span></label>
+            <p class="settings-footnote">You can also show or hide amounts from the dashboard balance card.</p>
+          </section>
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon preferences-icon">✦</span><div><h3>App preferences</h3><p>Make NexaPay open the way you like.</p></div></div>
+            <form id="appPreferencesForm" class="settings-form">
+              <label for="defaultStartPage">Start page after sign-in</label>
+              <select id="defaultStartPage"><option value="dashboard">Dashboard</option><option value="transactions">Transactions</option><option value="grow">Grow</option></select>
+              <label class="setting-toggle" for="transactionSuccessAlerts"><span><b>Transaction success messages</b><small>Show a toast after a wallet action completes.</small></span><input id="transactionSuccessAlerts" type="checkbox"><span class="toggle-track" aria-hidden="true"></span></label>
+              <button class="primary" type="submit">Save preferences</button>
+              <p id="appPreferencesStatus" class="settings-status" role="status"></p>
+            </form>
+          </section>
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon session-icon">◷</span><div><h3>Session security</h3><p>Choose when an inactive demo session signs out.</p></div></div>
+            <form id="sessionSettingsForm" class="settings-form">
+              <label for="autoLogoutMinutes">Sign out after inactivity</label>
+              <select id="autoLogoutMinutes"><option value="0">Never</option><option value="5">5 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option></select>
+              <p class="settings-footnote session-footnote">The timer resets when you interact with the app. This browser-only demo does not provide production account security.</p>
+              <button class="primary" type="submit">Save session setting</button>
+              <p id="sessionSettingsStatus" class="settings-status" role="status"></p>
+            </form>
+          </section>
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon security-icon">⌁</span><div><h3>Change password</h3><p>Use 8–72 characters with a letter and a number.</p></div></div>
+            <form id="passwordSettingsForm" class="settings-form">
+              <label for="currentPassword">Current password</label>
+              <input id="currentPassword" type="password" autocomplete="current-password" required>
+              <label for="newPassword">New password</label>
+              <input id="newPassword" type="password" minlength="8" maxlength="72" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,72}" title="Use 8–72 characters and include a letter and a number." autocomplete="new-password" required aria-describedby="newPasswordHelp">
+              <div id="newPasswordHelp" class="password-guidance" data-password-guidance-for="newPassword"><div class="password-rules"><span data-password-rule="length"><i aria-hidden="true">○</i> 8–72 characters</span><span data-password-rule="letter"><i aria-hidden="true">○</i> A letter</span><span data-password-rule="number"><i aria-hidden="true">○</i> A number</span></div></div>
+              <label for="confirmNewPassword">Confirm new password</label>
+              <input id="confirmNewPassword" type="password" autocomplete="new-password" required>
+              <button class="primary" type="submit">Update password</button>
+              <p id="passwordSaveStatus" class="settings-status" role="status"></p>
+            </form>
+          </section>
+          <section class="panel settings-card">
+            <div class="settings-card-head"><span class="settings-icon pin-icon">▣</span><div><h3>Change wallet PIN</h3><p>Update the 4-digit PIN used to confirm wallet actions.</p></div></div>
+            <form id="pinSettingsForm" class="settings-form">
+              <label for="currentWalletPin">Current wallet PIN</label>
+              <input id="currentWalletPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" required>
+              <label for="newWalletPin">New wallet PIN</label>
+              <input id="newWalletPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" required>
+              <label for="confirmWalletPin">Confirm new PIN</label>
+              <input id="confirmWalletPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" required>
+              <button class="primary" type="submit">Update PIN</button>
+              <p id="pinSaveStatus" class="settings-status" role="status"></p>
+            </form>
+          </section>
+        </div>
+        <section class="settings-logout">
+          <div><b>Sign out of NexaPay</b><p>End this demo wallet session on this device.</p></div>
+          <button id="logoutBtn" class="danger-outline settings-logout-button" type="button"><span aria-hidden="true">↪</span> Log out</button>
+        </section>
+        <p class="settings-security-note"><span aria-hidden="true">i</span> This prototype stores account information in your browser. Use demo-only passwords and PINs.</p>
+      </div>
+
+      <!-- TERMS -->
+      <div id="page-terms" class="page hidden">
+        <div class="page-intro"><span class="eyebrow">NEXAPAY INFORMATION</span><h1>Terms &amp; conditions</h1><p>Plain-language terms for this educational wallet prototype.</p></div>
+        <article class="panel terms-panel">
+          <div class="terms-banner"><span class="terms-icon">i</span><div><b>Demo use only</b><p>NexaPay is a school-project simulation. It is not a bank, payment service or stored-value facility.</p></div></div>
+          <section class="terms-section"><span>01</span><div><h2>No real money or payments</h2><p>Balances, top-ups, wallet and bank transfers, withdrawals, mobile load, bill payments and receipts are simulated for demonstration. No funds are deposited, held, moved or redeemable for cash, and no telco, biller or bank is contacted.</p></div></section>
+          <section class="terms-section"><span>02</span><div><h2>Local demo data</h2><p>Account details and activity are saved in this browser. Anyone with access to this device or browser profile may be able to view or change that data.</p></div></section>
+          <section class="terms-section"><span>03</span><div><h2>Use demo credentials</h2><p>Do not enter real passwords, wallet PINs, bank details or other sensitive personal information. The prototype does not provide production-grade account security.</p></div></section>
+          <section class="terms-section"><span>04</span><div><h2>Illustrative limits</h2><p>Displayed transfer and withdrawal limits are example rules enforced only inside this demo. They are not the limits or policies of GCash, Maya or any financial institution.</p></div></section>
+          <section class="terms-section"><span>05</span><div><h2>Prototype availability</h2><p>Features may change or stop working as the project is updated. Keep anything you need outside the demo; browser data can be cleared at any time.</p></div></section>
+          <section class="terms-section"><span>06</span><div><h2>Grow is simulated</h2><p>Savings goals and the paper portfolio are local demonstrations only. They do not provide a savings account, investment, insurance, interest, market prices, coverage or returns. Paper positions stay at their contributed value.</p></div></section>
+          <div class="terms-footer">Informational terms for this educational prototype. No real financial service is provided.</div>
+        </article>
+      </div>
+
+      <!-- MOBILE MORE MENU -->
+      <div id="page-more" class="page hidden">
+        <div class="page-intro"><span class="eyebrow">WALLET MENU</span><h1>More</h1><p>Manage the rest of your NexaPay wallet.</p></div>
+        <div class="more-grid">
+          <button class="more-link" type="button" data-go="inbox"><span class="more-link-icon inbox-link-icon">✉</span><span><b>Inbox</b><small>Wallet updates and messages</small></span><span id="moreInboxBadge" class="more-inbox-badge hidden" aria-label="Unread messages"></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="load"><span class="more-link-icon load-link-icon">ϟ</span><span><b>Buy load</b><small>Top up a mobile number</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="bills"><span class="more-link-icon bills-link-icon">₱</span><span><b>Pay bills</b><small>Pay a demo biller</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="bank"><span class="more-link-icon bank-link-icon">⇢</span><span><b>Bank transfer</b><small>Transfer to a demo account</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="withdraw"><span class="more-link-icon cash-icon">↙</span><span><b>Withdraw</b><small>Cash out demo funds</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="grow"><span class="more-link-icon grow-link-icon">✦</span><span><b>Grow</b><small>Savings goals and paper portfolio</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="transactions"><span class="more-link-icon history-icon">☷</span><span><b>Transactions</b><small>Search wallet activity</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="profile"><span class="more-link-icon profile-icon">♙</span><span><b>My profile</b><small>Account details and limits</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="settings"><span class="more-link-icon settings-link-icon">⚙</span><span><b>Settings</b><small>Profile and security</small></span><i aria-hidden="true">→</i></button>
+          <button class="more-link" type="button" data-go="terms"><span class="more-link-icon terms-link-icon">▤</span><span><b>Terms &amp; conditions</b><small>About this demo wallet</small></span><i aria-hidden="true">→</i></button>
+        </div>
+        <section class="panel help-panel"><span class="panel-kicker">QUICK HELP</span><h3>Using the demo wallet</h3><div class="help-item"><b>What is Grow?</b><p>Use savings goals to set aside demo wallet funds or create paper portfolio positions. Contributions and withdrawals ask for your PIN, and positions can be closed at their contributed amount.</p></div><div class="help-item"><b>How do I receive money?</b><p>Open My QR and share your QR code or NexaPay username with another demo user.</p></div><div class="help-item"><b>How do load, bills and bank transfers work?</b><p>Choose an option, review it and confirm with your PIN. These actions only record simulated wallet transactions; they do not contact external services.</p></div><div class="help-item"><b>Why does an action ask for my PIN?</b><p>The PIN confirms simulated top-ups, transfers, withdrawals, load purchases, bill payments, bank transfers and Grow movements before they are recorded.</p></div><div class="help-item"><b>Where is my account data?</b><p>It is stored locally in this browser. This prototype does not connect to a real financial account.</p></div></section>
+      </div>
+    </main>
+  </section>
+
+  <!-- PIN MODAL -->
+  <div id="pinModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pinDialogTitle" aria-describedby="pinMessage">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModal" type="button" aria-label="Close PIN confirmation">×</button>
+      <div class="lock" aria-hidden="true">⌁</div>
+      <h2 id="pinDialogTitle">Confirm transaction</h2>
+      <p class="muted" id="pinMessage">Enter your 4-digit wallet PIN.</p>
+      <input id="confirmPin" class="pin-input" type="password" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••" aria-label="4-digit wallet PIN">
+      <button id="confirmPinBtn" class="primary full" type="button">Confirm</button>
+    </div>
+  </div>
+
+  <!-- RECEIPT MODAL -->
+  <div id="receiptModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="receiptDialogTitle">
+    <div class="modal-card receipt">
+      <button class="modal-close" id="closeReceipt" type="button" aria-label="Close receipt">×</button>
+      <div class="receipt-logo" aria-hidden="true">N✦</div>
+      <h2 id="receiptDialogTitle">NexaPay receipt</h2>
+      <div id="receiptContent"></div>
+      <div class="receipt-actions">
+        <button id="printReceipt" class="primary" type="button">Print receipt</button>
+        <button id="closeReceipt2" class="secondary" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR library for the demo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
